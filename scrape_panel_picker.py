@@ -24,10 +24,9 @@ themes = []
 levels = []
 tags = [] 
 
-numPages = 40599
-#for id_ in xrange(30090,42000) :
-for id_ in xrange(41900,41998) :
-    print id_ 
+good_pages = 0
+for id_ in xrange(30000,45000) :
+    print 'id= ' + str(id_) + ', good_pages=' + str(good_pages) 
     
     # construct search url from specified criteria    
     url = 'http://panelpicker.sxsw.com/vote/' + unicode(id_)
@@ -38,7 +37,7 @@ for id_ in xrange(41900,41998) :
         response = urllib2.urlopen(url) 
         
     except:
-        print "404 for id = " + unicode(id_)
+        #print "404 for id = " + unicode(id_)
         continue
 
     soup = bs4.BeautifulSoup(response)
@@ -48,9 +47,7 @@ for id_ in xrange(41900,41998) :
     if  flash_notice != None :
         assert 'Voting period for this idea type has passed' in flash_notice.text, 'alternate reason for flash notice for id= ' + unicode(id_) + ', check source.'
  
-    else :
-    
-                             
+    else :                             
         # title - if no h1 object, or title is empty string, skip id 
         article = soup.find('article')
         
@@ -61,12 +58,14 @@ for id_ in xrange(41900,41998) :
             
         if title == '':
             continue
+        
+        good_pages = good_pages + 1
             
         titles.append(title)
              
         # id and url
         ids.append(id_)
-        urls.append(urls)
+        urls.append(url)
          
         # idea description
         idea_description_id = soup.find('p', id='idea_description')
@@ -78,9 +77,9 @@ for id_ in xrange(41900,41998) :
             our_kid = all_siblings.pop(0)
         
         idea_descriptions.append(idea_description)
-        print id_
+        
         # questions     
-        question_soup = soup.findAll('ol', id='questions_answered')[0].findAll('li')
+        question_soup = soup.find('ol', id='questions_answered').findAll('li')
         this_set_of_questions = []
         for q in question_soup:
             this_set_of_questions.append(q.text.encode('utf-8', 'replace'))
@@ -95,16 +94,15 @@ for id_ in xrange(41900,41998) :
         #questions.append(this_set_of_questions)            
         
         # Speaker
-        try :
-            # speaker not always listed
-            speaker_soup = soup.findAll('ol', id='questions_answered')[1].findAll('ul')    
-            this_set_of_speakers = []
-            for sp in speaker_soup:
-                this_set_of_speakers.append(sp.text.encode('utf-8', 'replace'))
-                
-            speakers.append(this_set_of_speakers)    
-        except : 
-            speakers.append('')                
+        assert len(article.findAll('ul')) == 1 
+        speaker_soup = article.find('ul').findAll('li')
+        this_set_of_speakers = []
+        for sp in speaker_soup:
+            
+            this_speaker = sp.renderContents().rsplit('\n')[1]
+            this_set_of_speakers.append(this_speaker)
+            
+        speakers.append(this_set_of_speakers)    
             
         ### Use this code if you want to store spreaksers in dict instead of list ###  
         #speaker_soup = soup.findAll('ol', id='questions_answered')[1].findAll('ul')    
@@ -145,13 +143,13 @@ for id_ in xrange(41900,41998) :
         idx = ['Level' in x.text for x in meta_labels]
         level = pandas.Series(list(meta_data2))[idx].values[0].text                                          
         levels.append(level)
-pdb.set_trace()                                                
+                                    
 # store results in pandas dataframe
 d = {'titles' : titles, 'idea_descriptions' : idea_descriptions, 'questions' : questions, 'urls' : urls, 'speakers' : speakers, 'event_types' : event_types, 'categories' : categories, 'themes' : themes, 'levels' : levels,'tags' :tags}
 df = pandas.DataFrame(d,index= ids)
 
-print df.head()
-print len(df)
+#print df.head()
+print 'size =' + str(len(df))
 #df.to_hdf('panel_picker_data.h5','df')
 #df.to_csv('panel_picker_data.csv')
 df.to_json('panel_picker_data.json')
