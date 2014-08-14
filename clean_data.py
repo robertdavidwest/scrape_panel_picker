@@ -5,7 +5,17 @@ from nltk.corpus import stopwords
 import string
 import pdb
 
-
+def add_to_html_file(path,row_num,insert) :
+    f = open(path, "r")
+    contents = f.readlines()
+    f.close()
+    
+    contents.insert(row_num, insert)
+    
+    f = open(path, "w")
+    contents = "".join(contents)
+    f.write(contents)
+    f.close()
 
 ####################################################
 ##                NLP Functions  
@@ -49,52 +59,25 @@ def top_words(series):
     # split the string on each row into single words
     split_words = [x.split() for x in all_words]
 
+    # one word per entry
     single_word_per_sentence = [set(x) for x in split_words]
  
-    # concatenate all words
-    full_list2 = [item for sublist in single_word_per_sentence for item in sublist]
+    # concatenate all words into single list
+    full_list = [item for sublist in single_word_per_sentence for item in sublist]
  
-    full_list = []
-    for x in split_words:
-        full_list = full_list + x
-    
     # Remove standard words using NLTK library
     std_word_set=set(stopwords.words('english'))
-    full_list = [x if x not in std_word_set else None for x in full_list]                  
-    full_list2 = [x if x not in std_word_set else None for x in full_list2]                  
+    full_list = [x if x not in std_word_set else None for x in full_list]                                   
+    
     # remove non activity entries
     non_actitivity_words = ['']
     
     full_list = pandas.Series([x if x not in non_actitivity_words else None for x in full_list])                                                                           
-    full_list2 = pandas.Series([x if x not in non_actitivity_words else None for x in full_list2])
-    # find the list of unique words   
-    unique_list = []
-    for x in full_list:
-        if x not in unique_list:
-            unique_list.append(x)
+
+    # stores the unique entry results in a series
+    unique_words_series = full_list.value_counts()
  
-    # count the occurence of each word, 1 per row of the dataset
-    count_entries = []
-    for y in unique_list :
-        count = 0
-        for x in split_words:
-            if y in x:
-                count = count + 1
- 
-        count_entries.append(count)
- 
-    test_count = full_list2.value_counts()
- 
-    # stores the unique entry results in a dataframe 
-    unique_words_df = pandas.DataFrame({"Unique Words" : unique_list, "frequency" : count_entries})
- 
-    # drop null values 
-    unique_words_df = unique_words_df[~unique_words_df['Unique Words'].isnull()]
- 
-    # sort dataframe
-    unique_words_df = unique_words_df.sort('frequency',ascending=False)
- 
-    return unique_words_df, test_count
+    return unique_words_series
  
 ####################################################
 ##             PLotting functions 
@@ -148,14 +131,9 @@ def plot_topN_bar(N,my_series,name):
 if __name__ == "__main__" :     
     
     df = pandas.io.json.read_json('panel_picker_data_all.json')
-    
-    # 5310 entries
-    # remove "Test"
-    #idx = (df.idea_descriptions == "Test") | (df.idea_descriptions == "test") | (df.titles == "Test") | (df.titles == "test")
-    #df = df[~idx] # (41 dropped)
-    
-    # remove entries with no description
-    #df = df[df.idea_descriptions != ""] # 4986 entries (304 dropped)
+   
+    # get all_tags
+    all_tags = pandas.Series([item for sublist in df.tags for item in sublist])    
     
     ####################
     ### Top 5s plots ###
@@ -176,6 +154,29 @@ if __name__ == "__main__" :
     ###     NLP      ###
     ####################
 
-    top_title_words, test  = top_words(df.titles)
-    #top_description_words = top_words(df.idea_descriptions)
+    top_title_words = top_words(df.titles)
+    top_description_words = top_words(df.idea_descriptions)
+    top_tags = all_tags.value_counts()
+
+    ###################################
+    ### Print top N results to html ###
+    ###################################
+    N = 30
+
+    df = pandas.DataFrame({'Frequency' : top_tags[:N]})    
+    top_tags_html =df.to_html()
+    top_tags_html = '<h3>Top 30 Proposal Tags:</h3> \n' + top_tags_html
+    add_to_html_file("SXSE_panel_picker_analysis.html",314,top_tags_html)  
     
+    df = pandas.DataFrame({'Frequency' : top_title_words[:N]})
+    top_title_words_html = df.to_html()
+    top_title_words_html = '<h3>Top 30 words in Proposal titles:</h3> \n' + top_title_words_html        
+    add_to_html_file("SXSE_panel_picker_analysis.html",316,top_title_words_html) 
+
+    df = pandas.DataFrame({'Frequency' : top_description_words[:N]})  
+    top_description_words_html = df.to_html()
+    top_description_words_html = '<h3>Top 30 words in Proposal descriptions:</h3> \n' + top_description_words_html      
+    add_to_html_file("SXSE_panel_picker_analysis.html",318,top_description_words_html) 
+        
+ 
+
