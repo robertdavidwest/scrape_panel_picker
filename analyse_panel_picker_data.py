@@ -3,19 +3,9 @@ import matplotlib.pyplot as plt
 import numpy
 from nltk.corpus import stopwords
 import string
+import subprocess
 import pdb
 
-def add_to_html_file(path,row_num,insert) :
-    f = open(path, "r")
-    contents = f.readlines()
-    f.close()
-    
-    contents.insert(row_num, insert)
-    
-    f = open(path, "w")
-    contents = "".join(contents)
-    f.write(contents)
-    f.close()
 
 ####################################################
 ##                NLP Functions  
@@ -29,12 +19,18 @@ def is_number(s):
     except ValueError:
         return False
  
-def top_words(series):
+def top_words(series, std_word_set, additional_stop_words):
     ''' Takes as an argument a pandas Series of strings
  
     :param df: a pandas Series containing strings of words
     :type seach_key_words: pandas.Series
- 
+    
+    :param std_word_set: a list of std stopwords
+    :type seach_key_words: list
+
+    :param additional_stop_words: a list of additional stopwords
+    :type seach_key_words: list
+  
     
     '''
     # Remove duplicate listings
@@ -66,13 +62,10 @@ def top_words(series):
     full_list = [item for sublist in single_word_per_sentence for item in sublist]
  
     # Remove standard words using NLTK library
-    std_word_set=set(stopwords.words('english'))
     full_list = [x if x not in std_word_set else None for x in full_list]                                   
     
-    # remove non activity entries
-    non_actitivity_words = ['']
-    
-    full_list = pandas.Series([x if x not in non_actitivity_words else None for x in full_list])                                                                           
+    # remove additional_stop_words
+    full_list = pandas.Series([x if x not in additional_stop_words else None for x in full_list])                                                                           
 
     # stores the unique entry results in a series
     unique_words_series = full_list.value_counts()
@@ -136,7 +129,7 @@ if __name__ == "__main__" :
     all_tags = pandas.Series([item for sublist in df.tags for item in sublist])    
     
     ####################
-    ### Top 5s plots ###
+    ### Top Ns plots ###
     ####################
     makeCharts = False
     
@@ -149,34 +142,86 @@ if __name__ == "__main__" :
         plot_topN_bar(N,df.levels,'Levels') # Top 5 levels  
         all_tags = pandas.Series([item for sublist in df.tags for item in sublist])
         plot_topN_bar(N,all_tags,'Tags') # Top 5 tags  
-    
+
     ####################
     ###     NLP      ###
     ####################
+    std_word_set = set(stopwords.words('english'))
+    additional_stop_words = ['also','get','way','use','well','way']
+    
+    top_title_words = top_words(df.titles,std_word_set,additional_stop_words)
+    top_description_words = top_words(df.idea_descriptions,std_word_set,additional_stop_words)
+    top_tags = all_tags.value_counts()    
 
-    top_title_words = top_words(df.titles)
-    top_description_words = top_words(df.idea_descriptions)
-    top_tags = all_tags.value_counts()
+    ###########################################
+    ### Create Top Ns tables and add to html###
+    ###########################################
+    
+    # Create html file from markdown file
+    filename = 'SXSE_panel_picker_analysis'
+    args = ['pandoc', filename+'.md' , '-o', filename+'.html']
+    subprocess.check_call(args)
 
-    ###################################
-    ### Print top N results to html ###
-    ###################################
+
+    # create html tables and add to html file
+    f = open(filename+'.html', "r")
+    contents = f.readlines()
+    f.close()
+    
+    # add css
+    cssfile = open("markdown_style.css",'r')
+    contents.insert(0,'<!DOCTYPE HTML><html><head><style>')  
+    contents.insert(1,cssfile.read())
+    contents.insert(2,'</head></style>')  
+    contents.insert(3,'<body>')      
+    cssfile.close()
+  
+    contents.append('<h2>Meta Data distributions</h2> \n')
+    for my_series in [df.themes, df.event_types, df.categories, df.levels]:
+        N = len(my_series.value_counts()) # ensure topN is less than # categories
+        value_count_percent = my_series.value_counts(normalize=True)
+        value_count_freq = my_series.value_counts()
+        topN_percent = value_count_percent[:N]
+        topN_percent = topN_percent.apply(lambda x: str(round(x*100,2)) + '%')
+        topN_freq = value_count_freq[:N]
+      
+        html_table = (pandas.DataFrame({'Frequency' :topN_freq}).join(pandas.DataFrame({'Percent' :topN_percent}))).to_html()
+        contents.append('<h3>Distribution of ' + my_series.name +': \n</h3>')
+        contents.append(html_table)
+
+    ############################################
+    ### Print top N results from NLP to html ###
+    ############################################
+      
     N = 30
-
+    
     df = pandas.DataFrame({'Frequency' : top_tags[:N]})    
     top_tags_html =df.to_html()
     top_tags_html = '<h3>Top 30 Proposal Tags:</h3> \n' + top_tags_html
-    add_to_html_file("SXSE_panel_picker_analysis.html",314,top_tags_html)  
+    contents.append(top_tags_html)
+    
+    contents.append('<h2>NLP Results:</h2> \n')
     
     df = pandas.DataFrame({'Frequency' : top_title_words[:N]})
     top_title_words_html = df.to_html()
-    top_title_words_html = '<h3>Top 30 words in Proposal titles:</h3> \n' + top_title_words_html        
-    add_to_html_file("SXSE_panel_picker_analysis.html",316,top_title_words_html) 
-
+    top_title_words_html = '<h3>Top 30 words in Proposal titles (limit 1 word per title):</h3> \n' + top_title_words_html 
+    contents.append(top_title_words_html)       
+  
     df = pandas.DataFrame({'Frequency' : top_description_words[:N]})  
     top_description_words_html = df.to_html()
-    top_description_words_html = '<h3>Top 30 words in Proposal descriptions:</h3> \n' + top_description_words_html      
-    add_to_html_file("SXSE_panel_picker_analysis.html",318,top_description_words_html) 
-        
- 
+    top_description_words_html = '<h3>Top 30 words in Proposal descriptions (limit 1 word per description):</h3> \n' + top_description_words_html      
+    contents.append(top_description_words_html)
+
+
+    contents.append('<h3>Stop words removed in NLP analysis</h3> \n')
+    contents.append('<b>Standard Stopwords</b>: ' + ", ".join(std_word_set))
+    contents.append('<h3></h3> ')    
+    contents.append('<b>Additional Stopwords</b>: ' + ", ".join(additional_stop_words) + '\n')    
+
+    contents.append('</body></html>')    
+    f = open(filename+'.html', "w")
+    contents = "".join(contents)
+    f.write(contents)
+    f.close()
+    
 
