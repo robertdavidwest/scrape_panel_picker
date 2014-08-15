@@ -5,7 +5,8 @@ from nltk.corpus import stopwords
 import string
 import subprocess
 import pdb
-
+import time
+import datetime
 
 ####################################################
 ##                NLP Functions  
@@ -146,8 +147,8 @@ if __name__ == "__main__" :
     ####################
     ###     NLP      ###
     ####################
-    std_word_set = set(stopwords.words('english'))
-    additional_stop_words = ['also','get','way','use','well','way']
+    std_word_set = numpy.sort(list(stopwords.words('english')))
+    additional_stop_words = numpy.sort(['also','get','way','use','well','new','session','panel','discuss','us','one','work','make','take','using','need','many','making','content','around','even','ways','years','best','better',])
     
     top_title_words = top_words(df.titles,std_word_set,additional_stop_words)
     top_description_words = top_words(df.idea_descriptions,std_word_set,additional_stop_words)
@@ -158,13 +159,19 @@ if __name__ == "__main__" :
     ###########################################
     
     # Create html file from markdown file
-    filename = 'SXSE_panel_picker_analysis'
-    args = ['pandoc', filename+'.md' , '-o', filename+'.html']
+    
+    
+    ts = time.time()
+    time_stamp = '_' + datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H.%M')
+    
+    initial_filename = 'SXSE_panel_picker_analysis'
+    output_filename = initial_filename + time_stamp
+    args = ['pandoc', initial_filename+'.md' , '-o', output_filename+ '.html']
     subprocess.check_call(args)
 
 
     # create html tables and add to html file
-    f = open(filename+'.html', "r")
+    f = open(output_filename+'.html', "r")
     contents = f.readlines()
     f.close()
     
@@ -219,7 +226,7 @@ if __name__ == "__main__" :
     contents.append('<b>Additional Stopwords</b>: ' + ", ".join(additional_stop_words) + '\n')    
 
     contents.append('</body></html>')    
-    f = open(filename+'.html', "w")
+    f = open(output_filename + '.html', "w")
     contents = "".join(contents)
     f.write(contents)
     f.close()

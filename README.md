@@ -1,14 +1,13 @@
 # Dependencies
 
 ### Python Packages:
-* `beautifulsoup4`
-* pandas`
-* numpy`
+* `beautifulsoup4` (web scraping)
+* `pandas` (analysis)
+* `numpy` (analysis)
 * `nltk.corpus` (for stopwords in NLP analysis)
 
 ### Other:
-* `pandoc` (to convert md to html)
-
+* `pandoc` (to convert `.md` to `.html`)
 
 # Py files
 
