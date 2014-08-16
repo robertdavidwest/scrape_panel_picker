@@ -86,13 +86,6 @@ for id_ in xrange(30000,45000) :
               
         questions.append(this_set_of_questions)    
         
-        ### Use this code if you want to store questions in dict instead of list ###
-        #this_set_of_questions = {}
-        #for i in xrange(len(question_soup)):
-        #    this_set_of_questions['question'+unicode(i+1)] = question_soup[i].text.encode('utf-8', 'replace')
-        #      
-        #questions.append(this_set_of_questions)            
-        
         # Speaker
         assert len(article.findAll('ul')) == 1 
         speaker_soup = article.find('ul').findAll('li')
@@ -103,15 +96,7 @@ for id_ in xrange(30000,45000) :
             this_set_of_speakers.append(this_speaker)
             
         speakers.append(this_set_of_speakers)    
-            
-        ### Use this code if you want to store spreaksers in dict instead of list ###  
-        #speaker_soup = soup.findAll('ol', id='questions_answered')[1].findAll('ul')    
-        #this_set_of_speakers = {}
-        #for i in xrange(len(speaker_soup)):
-        #    this_set_of_speakers['speaker'+unicode(i+1)] = speaker_soup[i].text.encode('utf-8', 'replace')
-        #      
-        #speakers.append(this_set_of_speakers)     
-      
+
         # tags     
         tag_soup = soup.findAll('p')
         tag_data = [x for x in tag_soup if 'Tags' in x.text]
