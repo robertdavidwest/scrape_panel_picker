@@ -18,6 +18,8 @@ titles = []
 idea_descriptions = []
 questions = [] 
 speakers = []
+companies = []
+company_websites = []
 event_types = []
 categories = []
 themes = []
@@ -25,7 +27,8 @@ levels = []
 tags = [] 
 
 good_pages = 0
-for id_ in xrange(30000,45000) :
+id_df =pandas.read_csv('panel_ids.csv')
+for id_ in id_df.id :
     print 'id= ' + str(id_) + ', good_pages=' + str(good_pages) 
     
     # construct search url from specified criteria    
@@ -86,17 +89,26 @@ for id_ in xrange(30000,45000) :
               
         questions.append(this_set_of_questions)    
         
-        # Speaker
+        # Speaker, company and company website
         assert len(article.findAll('ul')) == 1 
         speaker_soup = article.find('ul').findAll('li')
         this_set_of_speakers = []
+        this_set_of_companies = []
+        this_set_of_company_websites = []
         for sp in speaker_soup:
             
             this_speaker = sp.renderContents().rsplit('\n')[1]
+            this_company = sp.find('a').text
+            this_company_website = sp.find('a')['href']
+            
             this_set_of_speakers.append(this_speaker)
+            this_set_of_companies.append(this_company)
+            this_set_of_company_websites.append(this_company_website)
             
         speakers.append(this_set_of_speakers)    
-
+        companies.append(this_set_of_companies)    
+        company_websites.append(this_set_of_company_websites)    
+               
         # tags     
         tag_soup = soup.findAll('p')
         tag_data = [x for x in tag_soup if 'Tags' in x.text]
@@ -130,10 +142,9 @@ for id_ in xrange(30000,45000) :
         levels.append(level)
                                     
 # store results in pandas dataframe
-d = {'titles' : titles, 'idea_descriptions' : idea_descriptions, 'questions' : questions, 'urls' : urls, 'speakers' : speakers, 'event_types' : event_types, 'categories' : categories, 'themes' : themes, 'levels' : levels,'tags' :tags}
+d = {'titles' : titles, 'idea_descriptions' : idea_descriptions, 'questions' : questions, 'urls' : urls, 'speakers' : speakers, 'event_types' : event_types, 'categories' : categories, 'themes' : themes, 'levels' : levels,'tags' :tags, 'companies' : companies, 'company_websites' : company_websites}
 df = pandas.DataFrame(d,index= ids)
 
-#print df.head()
 print 'size =' + str(len(df))
 #df.to_hdf('panel_picker_data.h5','df')
 #df.to_csv('panel_picker_data.csv')
