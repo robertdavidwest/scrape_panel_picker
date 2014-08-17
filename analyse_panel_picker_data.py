@@ -52,13 +52,7 @@ def top_ngrams(series, std_word_set, additional_stop_words,n):
     
     # make all entries lower case
     all_words = [x.lower() for x in all_words]
- 
-    # remove numbers
-    without_numbers = []
-    for s in all_words:
-        without_numbers.append(''.join(ch for ch in s if not is_number(ch)))
-    all_words = without_numbers
-    
+     
     # Make all white space into a single space
     all_words = [re.sub( '\s+', ' ', x ).strip() for x in all_words]
     
@@ -76,6 +70,18 @@ def top_ngrams(series, std_word_set, additional_stop_words,n):
  
     # Make all white space into a single space
     all_words = [re.sub( '\s+', ' ', x ).strip() for x in all_words]
+ 
+    # remove stand alone numbers (keep number/letter combinations)
+    without_numbers = []
+    for s in all_words:
+        words = s.split(' ')
+        #words_without_numbers = [x if ~isnumber(x) for x in words]
+        #words_without_numbers = [None if is_number(x) else x for x in words]
+        words_without_numbers = [x for x in words if is_number(x) == False]
+        without_numbers.append(' '.join(words for words in words_without_numbers))
+    
+    # Make all white space into a single space
+    all_words = [re.sub( '\s+', ' ', x ).strip() for x in without_numbers]
  
     # split the string on each row into single ngrams
     split_ngrams = [ngrams(x, n) for x in all_words]
@@ -276,20 +282,22 @@ if __name__ == "__main__" :
     top_description_2grams_html = '<h3>Top 30 2grams in Proposal descriptions (limit 1 2gram per title):</h3> \n' + top_description_2grams_html 
     contents.append(top_description_2grams_html)
 
+    ### Top 3grams - titles
+    df = pandas.DataFrame({'Frequency' : top_title_3grams[:N]})
+    top_title_3grams_html = df.to_html()
+    top_title_3grams_html = '<h3>Top 30 3grams in Proposal titles (limit 1 3gram per title):</h3> \n' + top_title_3grams_html 
+    contents.append(top_title_3grams_html)
+    
+    ### Top 3grams - descriptions
+    df = pandas.DataFrame({'Frequency' : top_description_3grams[:N]})
+    top_description_3grams_html = df.to_html()
+    top_description_3grams_html = '<h3>Top 30 3grams in Proposal descriptions (limit 1 3gram per title):</h3> \n' + top_description_3grams_html 
+    contents.append(top_description_3grams_html)
+
     ##############
     ### Close file
     contents.append('</body></html>')    
-    f = open(output_filename + '.html', "w")
-    
-    
-    ccc = []
-    for line in contents:
-        if u'\u2013' in line :
-            line = line.replace(u'\u2013', "MASSIVE_DONKEY")
-        ccc.append(line)
-    
-    ccc = "".join(ccc)        
-    f.write(ccc)
+    f = open(output_filename + '.html', "w") 
+    contents = "".join(contents)        
+    f.write(contents)
     f.close()
-    
-
