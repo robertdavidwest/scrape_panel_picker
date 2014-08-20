@@ -82,7 +82,7 @@ def top_ngrams(series, std_word_set, additional_stop_words,n):
     
     # Make all white space into a single space
     all_words = [re.sub( '\s+', ' ', x ).strip() for x in without_numbers]
- 
+    pdb.set_trace()
     # split the string on each row into single ngrams
     split_ngrams = [ngrams(x, n) for x in all_words]
     
@@ -159,10 +159,12 @@ def plot_topN_bar(N,my_series,name):
                      
 if __name__ == "__main__" :     
     
-    df = pandas.io.json.read_json('panel_picker_data_all.json')
+    df = pandas.io.json.read_json('panel_picker_data_all_v2.json')
    
     # get all_tags
     all_tags = pandas.Series([item for sublist in df.tags for item in sublist])    
+    # get all companies
+    all_companies = pandas.Series([item for sublist in df.companies for item in sublist])    
     
     ####################
     ### Top Ns plots ###
@@ -176,7 +178,6 @@ if __name__ == "__main__" :
         plot_topN_bar(N,df.event_types,'Events') # Top 5 event types
         plot_topN_bar(N,df.categories,'Categories') # Top 5 categories
         plot_topN_bar(N,df.levels,'Levels') # Top 5 levels  
-        all_tags = pandas.Series([item for sublist in df.tags for item in sublist])
         plot_topN_bar(N,all_tags,'Tags') # Top 5 tags  
 
     ####################
@@ -243,8 +244,19 @@ if __name__ == "__main__" :
     ### Print top N results from NLP to html ###
     ############################################
       
+    ### Top Companies
+    N = 10
+    value_count_percent = all_companies.value_counts(normalize=True)
+    value_count_freq = all_companies.value_counts()
+    topN_percent = value_count_percent[:N]
+    topN_percent = topN_percent.apply(lambda x: str(round(x*100,2)) + '%')
+    topN_freq = value_count_freq[:N]
+    html_table = (pandas.DataFrame({'Frequency' :topN_freq}).join(pandas.DataFrame({'Percent' :topN_percent}))).to_html()
+    contents.append('<`h3>Top 10 Companies of Speakers:</h3>')
+    contents.append(html_table)
+      
     N = 30
-    
+    ### Top Tags
     df = pandas.DataFrame({'Frequency' : top_tags[:N]})    
     top_tags_html =df.to_html()
     top_tags_html = '<h3>Top 30 Proposal Tags:</h3> \n' + top_tags_html
