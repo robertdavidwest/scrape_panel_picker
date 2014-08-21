@@ -1,0 +1,1623 @@
+<!DOCTYPE HTML><html><head><style>/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 100%
+}
+</head></style><body><h1 id="sxse-panel-picker">SXSE Panel Picker</h1>
+<h2 id="about-panelpicker">About PanelPicker</h2>
+<p>The PanelPicker is a two-step online process that allows the SXSW community to have a significant voice in programming SXSWedu, SXSW Interactive, SXSW Film, SXSW Music and SXSW Eco conference activities (presentations, panels, discussions, demonstrations, etc.)</p>
+<p>STEP 1 encourages the community to enter proposals for daytime conference programming for all four SXSW events.</p>
+<p>STEP 2 allows the community to browse all of these ideas, leave comments, and vote for what they think are the best fit for the March event.</p>
+<h2 id="analysis-of-current-panel-proposals">Analysis of current panel proposals</h2>
+<ul>
+<li>After scraping the data from <a href="">http://panelpicker.sxsw.com/vote</a> I found <strong>5,310</strong> entries in the competition. The search infrastructure provided by PanelPicker only shows a total <strong>4,450</strong> entries available, suggesting that some of the data gathered is not available through the online search facility.</li>
+</ul>
+<p>The resulting analysis was performed on all 5,310 entries:</p>
+<h2>Meta Data distributions</h2> 
+<h3>Distribution of theme: 
+</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Frequency</th>
+      <th>Percent</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Entrepreneurialism and Business</th>
+      <td> 507</td>
+      <td> 9.58%</td>
+    </tr>
+    <tr>
+      <th>Branding and Marketing</th>
+      <td> 471</td>
+      <td>  8.9%</td>
+    </tr>
+    <tr>
+      <th>Design and Development</th>
+      <td> 416</td>
+      <td> 7.86%</td>
+    </tr>
+    <tr>
+      <th>Content and Distribution</th>
+      <td> 355</td>
+      <td>  6.7%</td>
+    </tr>
+    <tr>
+      <th>Instructional Strategies &amp; Best Practices</th>
+      <td> 239</td>
+      <td> 4.51%</td>
+    </tr>
+    <tr>
+      <th>Social and Relationships</th>
+      <td> 196</td>
+      <td>  3.7%</td>
+    </tr>
+    <tr>
+      <th>Work and Career</th>
+      <td> 188</td>
+      <td> 3.55%</td>
+    </tr>
+    <tr>
+      <th>Health and Medtech</th>
+      <td> 143</td>
+      <td>  2.7%</td>
+    </tr>
+    <tr>
+      <th>Achievement Gaps &amp; Educational Equality</th>
+      <td> 125</td>
+      <td> 2.36%</td>
+    </tr>
+    <tr>
+      <th>Entrepreneurialism in Education</th>
+      <td> 119</td>
+      <td> 2.25%</td>
+    </tr>
+    <tr>
+      <th>Sports</th>
+      <td> 115</td>
+      <td> 2.17%</td>
+    </tr>
+    <tr>
+      <th>Non-Profit and Activism</th>
+      <td> 115</td>
+      <td> 2.17%</td>
+    </tr>
+    <tr>
+      <th>Entertainment and Immersion</th>
+      <td> 114</td>
+      <td> 2.15%</td>
+    </tr>
+    <tr>
+      <th>AI and Intelligent Devices</th>
+      <td> 112</td>
+      <td> 2.12%</td>
+    </tr>
+    <tr>
+      <th>Leadership &amp; Empowerment</th>
+      <td> 111</td>
+      <td>  2.1%</td>
+    </tr>
+    <tr>
+      <th>Art and Inspiration</th>
+      <td> 106</td>
+      <td>  2.0%</td>
+    </tr>
+    <tr>
+      <th>Privacy and Security</th>
+      <td> 102</td>
+      <td> 1.93%</td>
+    </tr>
+    <tr>
+      <th>Policy and Civic Engagement</th>
+      <td>  92</td>
+      <td> 1.74%</td>
+    </tr>
+    <tr>
+      <th>Diversity and Emerging Markets</th>
+      <td>  91</td>
+      <td> 1.72%</td>
+    </tr>
+    <tr>
+      <th>Gaming and Game Development</th>
+      <td>  84</td>
+      <td> 1.59%</td>
+    </tr>
+    <tr>
+      <th>DIY, Hacker and Maker</th>
+      <td>  83</td>
+      <td> 1.57%</td>
+    </tr>
+    <tr>
+      <th>Gaming &amp; Virtual Learning</th>
+      <td>  82</td>
+      <td> 1.55%</td>
+    </tr>
+    <tr>
+      <th>WTF and Beyond</th>
+      <td>  82</td>
+      <td> 1.55%</td>
+    </tr>
+    <tr>
+      <th>Social &amp; Mobile Learning</th>
+      <td>  79</td>
+      <td> 1.49%</td>
+    </tr>
+    <tr>
+      <th>Cognitive Process &amp; Design Thinking</th>
+      <td>  72</td>
+      <td> 1.36%</td>
+    </tr>
+    <tr>
+      <th>DIY, Maker &amp; Hacker</th>
+      <td>  72</td>
+      <td> 1.36%</td>
+    </tr>
+    <tr>
+      <th>Fashion, Style and Wearable Technology</th>
+      <td>  70</td>
+      <td> 1.32%</td>
+    </tr>
+    <tr>
+      <th>Big Data &amp; Learning Analytics</th>
+      <td>  61</td>
+      <td> 1.15%</td>
+    </tr>
+    <tr>
+      <th>Systemic Implementation &amp; Scale</th>
+      <td>  61</td>
+      <td> 1.15%</td>
+    </tr>
+    <tr>
+      <th>Continuing Education &amp; Workforce Development</th>
+      <td>  58</td>
+      <td>  1.1%</td>
+    </tr>
+    <tr>
+      <th>Food and Dining</th>
+      <td>  51</td>
+      <td> 0.96%</td>
+    </tr>
+    <tr>
+      <th>Assessment, Accountability &amp; Standards</th>
+      <td>  49</td>
+      <td> 0.93%</td>
+    </tr>
+    <tr>
+      <th>Smart Transportation and Cities</th>
+      <td>  47</td>
+      <td> 0.89%</td>
+    </tr>
+    <tr>
+      <th>How To/DIY</th>
+      <td>  46</td>
+      <td> 0.87%</td>
+    </tr>
+    <tr>
+      <th>Digital Music/Streaming</th>
+      <td>  40</td>
+      <td> 0.76%</td>
+    </tr>
+    <tr>
+      <th>Other</th>
+      <td>  35</td>
+      <td> 0.66%</td>
+    </tr>
+    <tr>
+      <th>Science and Space Exploration</th>
+      <td>  33</td>
+      <td> 0.62%</td>
+    </tr>
+    <tr>
+      <th>Case Study</th>
+      <td>  32</td>
+      <td>  0.6%</td>
+    </tr>
+    <tr>
+      <th>Marketing</th>
+      <td>  29</td>
+      <td> 0.55%</td>
+    </tr>
+    <tr>
+      <th>International Models &amp; Approaches</th>
+      <td>  27</td>
+      <td> 0.51%</td>
+    </tr>
+    <tr>
+      <th>Technology</th>
+      <td>  27</td>
+      <td> 0.51%</td>
+    </tr>
+    <tr>
+      <th>Branding</th>
+      <td>  24</td>
+      <td> 0.45%</td>
+    </tr>
+    <tr>
+      <th>Special Needs &amp; Accessibility</th>
+      <td>  22</td>
+      <td> 0.42%</td>
+    </tr>
+    <tr>
+      <th>Policy &amp; Funding</th>
+      <td>  21</td>
+      <td>  0.4%</td>
+    </tr>
+    <tr>
+      <th>SEL &amp; Digital Citizenship</th>
+      <td>  20</td>
+      <td> 0.38%</td>
+    </tr>
+    <tr>
+      <th>Interactive Storytelling</th>
+      <td>  20</td>
+      <td> 0.38%</td>
+    </tr>
+    <tr>
+      <th>Production</th>
+      <td>  20</td>
+      <td> 0.38%</td>
+    </tr>
+    <tr>
+      <th>Touring/Venues</th>
+      <td>  16</td>
+      <td>  0.3%</td>
+    </tr>
+    <tr>
+      <th>Marketing and Promotion</th>
+      <td>  15</td>
+      <td> 0.28%</td>
+    </tr>
+    <tr>
+      <th>Licensing/Publishing</th>
+      <td>  14</td>
+      <td> 0.26%</td>
+    </tr>
+    <tr>
+      <th>Social Good in Film</th>
+      <td>  14</td>
+      <td> 0.26%</td>
+    </tr>
+    <tr>
+      <th>Tech</th>
+      <td>  13</td>
+      <td> 0.25%</td>
+    </tr>
+    <tr>
+      <th>State of the Industry</th>
+      <td>  13</td>
+      <td> 0.25%</td>
+    </tr>
+    <tr>
+      <th>International</th>
+      <td>  11</td>
+      <td> 0.21%</td>
+    </tr>
+    <tr>
+      <th>Historical</th>
+      <td>  10</td>
+      <td> 0.19%</td>
+    </tr>
+    <tr>
+      <th>Supervision/Music Placement</th>
+      <td>   9</td>
+      <td> 0.17%</td>
+    </tr>
+    <tr>
+      <th>Management</th>
+      <td>   9</td>
+      <td> 0.17%</td>
+    </tr>
+    <tr>
+      <th>Data</th>
+      <td>   9</td>
+      <td> 0.17%</td>
+    </tr>
+    <tr>
+      <th>Journalism/Writing/Media</th>
+      <td>   9</td>
+      <td> 0.17%</td>
+    </tr>
+    <tr>
+      <th>Social Media/Websites</th>
+      <td>   8</td>
+      <td> 0.15%</td>
+    </tr>
+    <tr>
+      <th>Genre Specific</th>
+      <td>   7</td>
+      <td> 0.13%</td>
+    </tr>
+    <tr>
+      <th>Policy/Politics</th>
+      <td>   7</td>
+      <td> 0.13%</td>
+    </tr>
+    <tr>
+      <th>Casting</th>
+      <td>   7</td>
+      <td> 0.13%</td>
+    </tr>
+    <tr>
+      <th>Studio/Producers</th>
+      <td>   6</td>
+      <td> 0.11%</td>
+    </tr>
+    <tr>
+      <th>Legal</th>
+      <td>   5</td>
+      <td> 0.09%</td>
+    </tr>
+    <tr>
+      <th>Video</th>
+      <td>   5</td>
+      <td> 0.09%</td>
+    </tr>
+    <tr>
+      <th>Funding</th>
+      <td>   5</td>
+      <td> 0.09%</td>
+    </tr>
+    <tr>
+      <th>Episodic</th>
+      <td>   5</td>
+      <td> 0.09%</td>
+    </tr>
+    <tr>
+      <th>Publicity</th>
+      <td>   4</td>
+      <td> 0.08%</td>
+    </tr>
+    <tr>
+      <th>Comedy</th>
+      <td>   4</td>
+      <td> 0.08%</td>
+    </tr>
+    <tr>
+      <th>Screenwriting</th>
+      <td>   4</td>
+      <td> 0.08%</td>
+    </tr>
+    <tr>
+      <th>Royalties</th>
+      <td>   4</td>
+      <td> 0.08%</td>
+    </tr>
+    <tr>
+      <th>A&amp;R</th>
+      <td>   3</td>
+      <td> 0.06%</td>
+    </tr>
+    <tr>
+      <th>Labels</th>
+      <td>   3</td>
+      <td> 0.06%</td>
+    </tr>
+    <tr>
+      <th>Meetups</th>
+      <td>   3</td>
+      <td> 0.06%</td>
+    </tr>
+    <tr>
+      <th>Interview</th>
+      <td>   3</td>
+      <td> 0.06%</td>
+    </tr>
+    <tr>
+      <th>Film Festivals</th>
+      <td>   2</td>
+      <td> 0.04%</td>
+    </tr>
+    <tr>
+      <th>Retail/Physical</th>
+      <td>   2</td>
+      <td> 0.04%</td>
+    </tr>
+    <tr>
+      <th>Music and Sound in Film</th>
+      <td>   2</td>
+      <td> 0.04%</td>
+    </tr>
+  </tbody>
+</table><h3>Distribution of event: 
+</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Frequency</th>
+      <th>Percent</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Interactive</th>
+      <td> 3517</td>
+      <td> 66.42%</td>
+    </tr>
+    <tr>
+      <th>EDU</th>
+      <td> 1218</td>
+      <td>  23.0%</td>
+    </tr>
+    <tr>
+      <th>Music</th>
+      <td>  331</td>
+      <td>  6.25%</td>
+    </tr>
+    <tr>
+      <th>Film</th>
+      <td>  229</td>
+      <td>  4.32%</td>
+    </tr>
+  </tbody>
+</table><h3>Distribution of category: 
+</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Frequency</th>
+      <th>Percent</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Panel</th>
+      <td> 1508</td>
+      <td> 28.48%</td>
+    </tr>
+    <tr>
+      <th>Solo</th>
+      <td> 1170</td>
+      <td>  22.1%</td>
+    </tr>
+    <tr>
+      <th>Dual</th>
+      <td>  726</td>
+      <td> 13.71%</td>
+    </tr>
+    <tr>
+      <th>Panel Discussion</th>
+      <td>  479</td>
+      <td>  9.05%</td>
+    </tr>
+    <tr>
+      <th>Workshop</th>
+      <td>  394</td>
+      <td>  7.44%</td>
+    </tr>
+    <tr>
+      <th>Solo Presentation</th>
+      <td>  273</td>
+      <td>  5.16%</td>
+    </tr>
+    <tr>
+      <th>Core Conversation</th>
+      <td>  236</td>
+      <td>  4.46%</td>
+    </tr>
+    <tr>
+      <th>Future15</th>
+      <td>  182</td>
+      <td>  3.44%</td>
+    </tr>
+    <tr>
+      <th>Meet Up</th>
+      <td>   73</td>
+      <td>  1.38%</td>
+    </tr>
+    <tr>
+      <th>Other</th>
+      <td>   44</td>
+      <td>  0.83%</td>
+    </tr>
+    <tr>
+      <th>Playground Talk</th>
+      <td>   34</td>
+      <td>  0.64%</td>
+    </tr>
+    <tr>
+      <th>Mentor Session</th>
+      <td>   33</td>
+      <td>  0.62%</td>
+    </tr>
+    <tr>
+      <th>Problem Solver</th>
+      <td>   29</td>
+      <td>  0.55%</td>
+    </tr>
+    <tr>
+      <th>Playground Hands On</th>
+      <td>   22</td>
+      <td>  0.42%</td>
+    </tr>
+    <tr>
+      <th>Conversation</th>
+      <td>   22</td>
+      <td>  0.42%</td>
+    </tr>
+    <tr>
+      <th>Book Reading</th>
+      <td>   15</td>
+      <td>  0.28%</td>
+    </tr>
+    <tr>
+      <th>Digital Domain</th>
+      <td>   10</td>
+      <td>  0.19%</td>
+    </tr>
+    <tr>
+      <th>Workshop/Clinic</th>
+      <td>   10</td>
+      <td>  0.19%</td>
+    </tr>
+    <tr>
+      <th>Mentor</th>
+      <td>    9</td>
+      <td>  0.17%</td>
+    </tr>
+    <tr>
+      <th>Meetup</th>
+      <td>    8</td>
+      <td>  0.15%</td>
+    </tr>
+    <tr>
+      <th>Debate</th>
+      <td>    8</td>
+      <td>  0.15%</td>
+    </tr>
+    <tr>
+      <th>Meet the Insiders</th>
+      <td>    6</td>
+      <td>  0.11%</td>
+    </tr>
+    <tr>
+      <th>Future 15</th>
+      <td>    3</td>
+      <td>  0.06%</td>
+    </tr>
+    <tr>
+      <th>Solo / Dual / Panel</th>
+      <td>    1</td>
+      <td>  0.02%</td>
+    </tr>
+  </tbody>
+</table><h3>Distribution of level: 
+</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Frequency</th>
+      <th>Percent</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Intermediate</th>
+      <td> 1987</td>
+      <td> 37.53%</td>
+    </tr>
+    <tr>
+      <th>Advanced</th>
+      <td> 1285</td>
+      <td> 24.27%</td>
+    </tr>
+    <tr>
+      <th>Basic Understanding</th>
+      <td>  982</td>
+      <td> 18.55%</td>
+    </tr>
+    <tr>
+      <th>Beginner</th>
+      <td>  804</td>
+      <td> 15.18%</td>
+    </tr>
+    <tr>
+      <th>Field Experience</th>
+      <td>  194</td>
+      <td>  3.66%</td>
+    </tr>
+    <tr>
+      <th>Deep Understanding</th>
+      <td>   42</td>
+      <td>  0.79%</td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>    1</td>
+      <td>  0.02%</td>
+    </tr>
+  </tbody>
+</table><h3>Top 10 Companies:</h3><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Frequency</th>
+      <th>Percent</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>IBM</th>
+      <td> 71</td>
+      <td> 0.77%</td>
+    </tr>
+    <tr>
+      <th>Huge</th>
+      <td> 43</td>
+      <td> 0.47%</td>
+    </tr>
+    <tr>
+      <th>SapientNitro</th>
+      <td> 34</td>
+      <td> 0.37%</td>
+    </tr>
+    <tr>
+      <th>Google</th>
+      <td> 34</td>
+      <td> 0.37%</td>
+    </tr>
+    <tr>
+      <th>R/GA</th>
+      <td> 25</td>
+      <td> 0.27%</td>
+    </tr>
+    <tr>
+      <th>The University of Texas at Austin</th>
+      <td> 21</td>
+      <td> 0.23%</td>
+    </tr>
+    <tr>
+      <th>Pearson</th>
+      <td> 20</td>
+      <td> 0.22%</td>
+    </tr>
+    <tr>
+      <th>Facebook</th>
+      <td> 18</td>
+      <td>  0.2%</td>
+    </tr>
+    <tr>
+      <th>IDEO</th>
+      <td> 18</td>
+      <td>  0.2%</td>
+    </tr>
+    <tr>
+      <th>NASA</th>
+      <td> 17</td>
+      <td> 0.18%</td>
+    </tr>
+  </tbody>
+</table><h3>Top 30 Proposal Tags:</h3> 
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Frequency</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>social media</th>
+      <td> 187</td>
+    </tr>
+    <tr>
+      <th>marketing</th>
+      <td> 170</td>
+    </tr>
+    <tr>
+      <th>design</th>
+      <td> 150</td>
+    </tr>
+    <tr>
+      <th>technology</th>
+      <td> 145</td>
+    </tr>
+    <tr>
+      <th>innovation</th>
+      <td> 128</td>
+    </tr>
+    <tr>
+      <th>mobile</th>
+      <td> 123</td>
+    </tr>
+    <tr>
+      <th>big data</th>
+      <td>  99</td>
+    </tr>
+    <tr>
+      <th>startup</th>
+      <td>  97</td>
+    </tr>
+    <tr>
+      <th>music</th>
+      <td>  95</td>
+    </tr>
+    <tr>
+      <th>data</th>
+      <td>  86</td>
+    </tr>
+    <tr>
+      <th>privacy</th>
+      <td>  85</td>
+    </tr>
+    <tr>
+      <th>advertising</th>
+      <td>  74</td>
+    </tr>
+    <tr>
+      <th>education</th>
+      <td>  73</td>
+    </tr>
+    <tr>
+      <th>digital</th>
+      <td>  71</td>
+    </tr>
+    <tr>
+      <th>entrepeneurship</th>
+      <td>  71</td>
+    </tr>
+    <tr>
+      <th>leadership</th>
+      <td>  71</td>
+    </tr>
+    <tr>
+      <th>internet of things</th>
+      <td>  68</td>
+    </tr>
+    <tr>
+      <th>storytelling</th>
+      <td>  63</td>
+    </tr>
+    <tr>
+      <th>collaboration</th>
+      <td>  61</td>
+    </tr>
+    <tr>
+      <th>user experience</th>
+      <td>  59</td>
+    </tr>
+    <tr>
+      <th>startups</th>
+      <td>  57</td>
+    </tr>
+    <tr>
+      <th>ux</th>
+      <td>  56</td>
+    </tr>
+    <tr>
+      <th>wearables</th>
+      <td>  54</td>
+    </tr>
+    <tr>
+      <th>media</th>
+      <td>  49</td>
+    </tr>
+    <tr>
+      <th>branding</th>
+      <td>  49</td>
+    </tr>
+    <tr>
+      <th>entrepreneur</th>
+      <td>  49</td>
+    </tr>
+    <tr>
+      <th>culture</th>
+      <td>  47</td>
+    </tr>
+    <tr>
+      <th>content</th>
+      <td>  45</td>
+    </tr>
+    <tr>
+      <th>content creation</th>
+      <td>  45</td>
+    </tr>
+    <tr>
+      <th>edtech</th>
+      <td>  44</td>
+    </tr>
+  </tbody>
+</table><h2>NLP Results:</h2> 
+<h3>Top 30 words in Proposal titles (limit 1 word per title):</h3> 
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ngram</th>
+      <th>Frequency</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>     social</td>
+      <td> 228</td>
+    </tr>
+    <tr>
+      <td>    digital</td>
+      <td> 200</td>
+    </tr>
+    <tr>
+      <td>       data</td>
+      <td> 200</td>
+    </tr>
+    <tr>
+      <td>     future</td>
+      <td> 189</td>
+    </tr>
+    <tr>
+      <td>       tech</td>
+      <td> 172</td>
+    </tr>
+    <tr>
+      <td>   learning</td>
+      <td> 165</td>
+    </tr>
+    <tr>
+      <td>     design</td>
+      <td> 152</td>
+    </tr>
+    <tr>
+      <td>      music</td>
+      <td> 150</td>
+    </tr>
+    <tr>
+      <td>      media</td>
+      <td> 136</td>
+    </tr>
+    <tr>
+      <td>  education</td>
+      <td> 130</td>
+    </tr>
+    <tr>
+      <td> innovation</td>
+      <td> 107</td>
+    </tr>
+    <tr>
+      <td>      world</td>
+      <td> 103</td>
+    </tr>
+    <tr>
+      <td>     mobile</td>
+      <td> 103</td>
+    </tr>
+    <tr>
+      <td>        big</td>
+      <td> 100</td>
+    </tr>
+    <tr>
+      <td>  marketing</td>
+      <td> 100</td>
+    </tr>
+    <tr>
+      <td> technology</td>
+      <td>  86</td>
+    </tr>
+    <tr>
+      <td>   building</td>
+      <td>  82</td>
+    </tr>
+    <tr>
+      <td>      brand</td>
+      <td>  81</td>
+    </tr>
+    <tr>
+      <td>     online</td>
+      <td>  76</td>
+    </tr>
+    <tr>
+      <td>       next</td>
+      <td>  75</td>
+    </tr>
+    <tr>
+      <td>     brands</td>
+      <td>  74</td>
+    </tr>
+    <tr>
+      <td>       game</td>
+      <td>  73</td>
+    </tr>
+    <tr>
+      <td> experience</td>
+      <td>  69</td>
+    </tr>
+    <tr>
+      <td>    science</td>
+      <td>  68</td>
+    </tr>
+    <tr>
+      <td>     beyond</td>
+      <td>  68</td>
+    </tr>
+    <tr>
+      <td>   creating</td>
+      <td>  64</td>
+    </tr>
+    <tr>
+      <td>   business</td>
+      <td>  61</td>
+    </tr>
+    <tr>
+      <td>         ux</td>
+      <td>  61</td>
+    </tr>
+    <tr>
+      <td>     change</td>
+      <td>  60</td>
+    </tr>
+    <tr>
+      <td>    startup</td>
+      <td>  59</td>
+    </tr>
+  </tbody>
+</table><h3>Top 30 words in Proposal descriptions (limit 1 word per description):</h3> 
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ngram</th>
+      <th>Frequency</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>  technology</td>
+      <td> 940</td>
+    </tr>
+    <tr>
+      <td>       world</td>
+      <td> 893</td>
+    </tr>
+    <tr>
+      <td>        like</td>
+      <td> 817</td>
+    </tr>
+    <tr>
+      <td>      people</td>
+      <td> 792</td>
+    </tr>
+    <tr>
+      <td>      social</td>
+      <td> 787</td>
+    </tr>
+    <tr>
+      <td>     digital</td>
+      <td> 776</td>
+    </tr>
+    <tr>
+      <td>       learn</td>
+      <td> 727</td>
+    </tr>
+    <tr>
+      <td>  experience</td>
+      <td> 692</td>
+    </tr>
+    <tr>
+      <td>      create</td>
+      <td> 691</td>
+    </tr>
+    <tr>
+      <td>       media</td>
+      <td> 635</td>
+    </tr>
+    <tr>
+      <td>        time</td>
+      <td> 609</td>
+    </tr>
+    <tr>
+      <td>    business</td>
+      <td> 603</td>
+    </tr>
+    <tr>
+      <td>    learning</td>
+      <td> 597</td>
+    </tr>
+    <tr>
+      <td>        data</td>
+      <td> 596</td>
+    </tr>
+    <tr>
+      <td>       share</td>
+      <td> 585</td>
+    </tr>
+    <tr>
+      <td>     explore</td>
+      <td> 582</td>
+    </tr>
+    <tr>
+      <td>        help</td>
+      <td> 581</td>
+    </tr>
+    <tr>
+      <td>      design</td>
+      <td> 552</td>
+    </tr>
+    <tr>
+      <td>      future</td>
+      <td> 546</td>
+    </tr>
+    <tr>
+      <td>   companies</td>
+      <td> 525</td>
+    </tr>
+    <tr>
+      <td>    students</td>
+      <td> 513</td>
+    </tr>
+    <tr>
+      <td>       tools</td>
+      <td> 487</td>
+    </tr>
+    <tr>
+      <td>    industry</td>
+      <td> 475</td>
+    </tr>
+    <tr>
+      <td>      online</td>
+      <td> 457</td>
+    </tr>
+    <tr>
+      <td>        talk</td>
+      <td> 456</td>
+    </tr>
+    <tr>
+      <td>      brands</td>
+      <td> 433</td>
+    </tr>
+    <tr>
+      <td> experiences</td>
+      <td> 431</td>
+    </tr>
+    <tr>
+      <td>   marketing</td>
+      <td> 422</td>
+    </tr>
+    <tr>
+      <td>      mobile</td>
+      <td> 414</td>
+    </tr>
+    <tr>
+      <td>   education</td>
+      <td> 413</td>
+    </tr>
+  </tbody>
+</table><h3>Top 30 2grams in Proposal titles (limit 1 2gram per title):</h3> 
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ngram</th>
+      <th>Frequency</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>          social media</td>
+      <td> 76</td>
+    </tr>
+    <tr>
+      <td>              big data</td>
+      <td> 55</td>
+    </tr>
+    <tr>
+      <td>          21st century</td>
+      <td> 22</td>
+    </tr>
+    <tr>
+      <td>             higher ed</td>
+      <td> 20</td>
+    </tr>
+    <tr>
+      <td>           digital age</td>
+      <td> 17</td>
+    </tr>
+    <tr>
+      <td>       design thinking</td>
+      <td> 16</td>
+    </tr>
+    <tr>
+      <td>       virtual reality</td>
+      <td> 12</td>
+    </tr>
+    <tr>
+      <td>         social change</td>
+      <td> 12</td>
+    </tr>
+    <tr>
+      <td>           open source</td>
+      <td> 11</td>
+    </tr>
+    <tr>
+      <td>      blended learning</td>
+      <td> 11</td>
+    </tr>
+    <tr>
+      <td>        music industry</td>
+      <td> 11</td>
+    </tr>
+    <tr>
+      <td>             new media</td>
+      <td> 10</td>
+    </tr>
+    <tr>
+      <td>           social good</td>
+      <td> 10</td>
+    </tr>
+    <tr>
+      <td>      higher education</td>
+      <td> 10</td>
+    </tr>
+    <tr>
+      <td>       sharing economy</td>
+      <td> 10</td>
+    </tr>
+    <tr>
+      <td>         digital world</td>
+      <td>  9</td>
+    </tr>
+    <tr>
+      <td>      content strategy</td>
+      <td>  9</td>
+    </tr>
+    <tr>
+      <td> personalized learning</td>
+      <td>  9</td>
+    </tr>
+    <tr>
+      <td>        fan experience</td>
+      <td>  9</td>
+    </tr>
+    <tr>
+      <td>     content marketing</td>
+      <td>  9</td>
+    </tr>
+    <tr>
+      <td>     digital marketing</td>
+      <td>  8</td>
+    </tr>
+    <tr>
+      <td>            whats next</td>
+      <td>  8</td>
+    </tr>
+    <tr>
+      <td>             next wave</td>
+      <td>  8</td>
+    </tr>
+    <tr>
+      <td>         wearable tech</td>
+      <td>  8</td>
+    </tr>
+    <tr>
+      <td>           3d printing</td>
+      <td>  8</td>
+    </tr>
+    <tr>
+      <td>       next generation</td>
+      <td>  8</td>
+    </tr>
+    <tr>
+      <td>        silicon valley</td>
+      <td>  8</td>
+    </tr>
+    <tr>
+      <td>               ed tech</td>
+      <td>  8</td>
+    </tr>
+    <tr>
+      <td>            case study</td>
+      <td>  7</td>
+    </tr>
+    <tr>
+      <td>     augmented reality</td>
+      <td>  7</td>
+    </tr>
+  </tbody>
+</table><h3>Top 30 2grams in Proposal descriptions (limit 1 2gram per title):</h3> 
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ngram</th>
+      <th>Frequency</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>     social media</td>
+      <td> 338</td>
+    </tr>
+    <tr>
+      <td>   best practices</td>
+      <td> 139</td>
+    </tr>
+    <tr>
+      <td>         big data</td>
+      <td> 111</td>
+    </tr>
+    <tr>
+      <td>          join us</td>
+      <td> 108</td>
+    </tr>
+    <tr>
+      <td>  user experience</td>
+      <td>  82</td>
+    </tr>
+    <tr>
+      <td>     case studies</td>
+      <td>  75</td>
+    </tr>
+    <tr>
+      <td>     21st century</td>
+      <td>  75</td>
+    </tr>
+    <tr>
+      <td>         new ways</td>
+      <td>  74</td>
+    </tr>
+    <tr>
+      <td>     session well</td>
+      <td>  63</td>
+    </tr>
+    <tr>
+      <td>     well discuss</td>
+      <td>  62</td>
+    </tr>
+    <tr>
+      <td>   mobile devices</td>
+      <td>  62</td>
+    </tr>
+    <tr>
+      <td>        every day</td>
+      <td>  62</td>
+    </tr>
+    <tr>
+      <td>        look like</td>
+      <td>  61</td>
+    </tr>
+    <tr>
+      <td> new technologies</td>
+      <td>  61</td>
+    </tr>
+    <tr>
+      <td> panel discussion</td>
+      <td>  55</td>
+    </tr>
+    <tr>
+      <td>       real world</td>
+      <td>  55</td>
+    </tr>
+    <tr>
+      <td>        years ago</td>
+      <td>  55</td>
+    </tr>
+    <tr>
+      <td>  next generation</td>
+      <td>  54</td>
+    </tr>
+    <tr>
+      <td>     well explore</td>
+      <td>  52</td>
+    </tr>
+    <tr>
+      <td>         new york</td>
+      <td>  52</td>
+    </tr>
+    <tr>
+      <td> higher education</td>
+      <td>  49</td>
+    </tr>
+    <tr>
+      <td>  design thinking</td>
+      <td>  47</td>
+    </tr>
+    <tr>
+      <td>   music industry</td>
+      <td>  47</td>
+    </tr>
+    <tr>
+      <td>    digital world</td>
+      <td>  46</td>
+    </tr>
+    <tr>
+      <td>   silicon valley</td>
+      <td>  46</td>
+    </tr>
+    <tr>
+      <td>   bring together</td>
+      <td>  45</td>
+    </tr>
+    <tr>
+      <td>    work together</td>
+      <td>  45</td>
+    </tr>
+    <tr>
+      <td>  social networks</td>
+      <td>  45</td>
+    </tr>
+    <tr>
+      <td>  lessons learned</td>
+      <td>  44</td>
+    </tr>
+    <tr>
+      <td>      digital age</td>
+      <td>  43</td>
+    </tr>
+  </tbody>
+</table><h3>Stop words removed in NLP analysis</h3> 
+<b>Standard Stopwords</b>: a, about, above, after, again, against, all, am, an, and, any, are, as, at, be, because, been, before, being, below, between, both, but, by, can, did, do, does, doing, don, down, during, each, few, for, from, further, had, has, have, having, he, her, here, hers, herself, him, himself, his, how, i, if, in, into, is, it, its, itself, just, me, more, most, my, myself, no, nor, not, now, of, off, on, once, only, or, other, our, ours, ourselves, out, over, own, s, same, she, should, so, some, such, t, than, that, the, their, theirs, them, themselves, then, there, these, they, this, those, through, to, too, under, until, up, very, was, we, were, what, when, where, which, while, who, whom, why, will, with, you, your, yours, yourself, yourselves<h3></h3> <b>Additional Stopwords</b>: also, around, best, better, content, discuss, even, get, good, make, making, many, need, new, one, panel, session, take, us, use, using, way, ways, well, work, years
+</body></html>

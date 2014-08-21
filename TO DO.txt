@@ -1,3 +1,0 @@
-
-make python run pandoc to: - convert md file to html
-			   - convert html to pdf

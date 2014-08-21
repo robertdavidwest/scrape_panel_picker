@@ -12,6 +12,16 @@ engine = sqlalchemy.create_engine("mysql+mysqldb://root:"+pword+"@localhost/sxsw
 ## Drop sql tables if they already exist
 meta = MetaData(bind=engine)
 
+title_words_map = Table('title_words_map',meta)
+description_words_map = Table('description_words_map',meta)
+title_2gram_map = Table('title_2gram_map',meta)
+description_2gram_map = Table('description_2gram_map',meta)
+
+title_words = Table('title_words',meta)
+description_words = Table('description_words',meta)
+title_2grams = Table('title_2grams',meta)
+description_2grams = Table('description_2grams',meta)
+
 panel_employee = Table('panel_employee',meta)
 employee_website = Table('employee_website',meta)
 employee = Table('employee',meta)
@@ -21,7 +31,19 @@ questions = Table('questions',meta)
 panel_description = Table('panel_description',meta)
 panel = Table('panel',meta)
 
+title_words_map.drop(engine,checkfirst=True)
+description_words_map.drop(engine,checkfirst=True)
+title_2gram_map.drop(engine,checkfirst=True)
+description_2gram_map.drop(engine,checkfirst=True)
+
+title_words.drop(engine,checkfirst=True)
+description_words.drop(engine,checkfirst=True)
+title_2grams.drop(engine,checkfirst=True)
+description_2grams.drop(engine,checkfirst=True)
+
 panel_employee.drop(engine,checkfirst=True)
+title_words.drop(engine,checkfirst=True)
+description_words.drop(engine,checkfirst=True)
 employee_website.drop(engine,checkfirst=True)
 employee.drop(engine,checkfirst=True)
 company.drop(engine,checkfirst=True)
@@ -36,6 +58,7 @@ panel.drop(engine,checkfirst=True)
 ### SET META ENVIRONMENT FOR DATABASE
 
 meta = MetaData(bind=engine)
+
 ## PANEL ###
 table_panel = Table('panel', meta,
 	Column('panel_id', Integer, primary_key=True, autoincrement=False),
@@ -90,7 +113,68 @@ table_panel_employee = Table('panel_employee', meta,
 	Column('panel_id', Integer, ForeignKey('panel.panel_id'))
 )
 
+#######################
+### ANALYSIS TABLES
+#######################
+# title_words TABLE
+table_title_words = Table('title_words', meta,
+	Column('id', Integer, primary_key=True, autoincrement=False),
+	Column('ngram', TEXT, nullable=False),
+	Column('Frequency', Integer, nullable=False)	
+)
+
+# title_words_map TABLE
+table_title_words_map = Table('title_words_map', meta,
+	Column('id', Integer, ForeignKey('title_words.id')),
+	Column('panel_id', Integer, ForeignKey('panel.panel_id'))
+)
+
+# table_description_words TABLE
+table_description_words = Table('description_words', meta,
+	Column('id', Integer, primary_key=True, autoincrement=False),
+	Column('ngram', TEXT, nullable=False),
+	Column('Frequency', Integer, nullable=False)	
+)
+
+# table_description_words_map TABLE
+table_description_words_map = Table('description_words_map', meta,
+	Column('id', Integer, ForeignKey('description_words.id')),
+	Column('panel_id', Integer, ForeignKey('panel.panel_id'))
+)
+
+# title_words TABLE
+table_title_2grams = Table('title_2grams', meta,
+	Column('id', Integer, primary_key=True, autoincrement=False),
+	Column('ngram', TEXT, nullable=False),
+	Column('Frequency', Integer, nullable=False)	
+)
+
+# title_words_map TABLE
+table_title_2gram_map = Table('title_2gram_map', meta,
+	Column('id', Integer, ForeignKey('title_words.id')),
+	Column('panel_id', Integer, ForeignKey('panel.panel_id'))
+)
+
+# table_description_words TABLE
+table_description_2grams = Table('description_2grams', meta,
+	Column('id', Integer, primary_key=True, autoincrement=False),
+	Column('ngram', TEXT, nullable=False),
+	Column('Frequency', Integer, nullable=False)	
+)
+
+# table_description_words_map TABLE
+table_description_2gram_map = Table('description_2gram_map', meta,
+	Column('id', Integer, ForeignKey('description_words.id')),
+	Column('panel_id', Integer, ForeignKey('panel.panel_id'))
+)
+
+#######################################################################################################################
+#######################################################################################################################
+#######################################################################################################################
+### Create all tables 
+
 meta.create_all(engine)
+
 #######################################################################################################################
 #######################################################################################################################
 #######################################################################################################################
@@ -98,6 +182,11 @@ meta.create_all(engine)
 
 ## Create dataframes that will be used as SQL tables: 
 df = pandas.io.json.read_json('panel_picker_data_all_v2.json')
+
+## reset index
+df.reset_index(inplace=True)
+df.drop('index',inplace=True,axis=1)
+df.index.name = 'panel_id'
 
 # Rename variables
 new_columns =  df.columns.to_series()
@@ -112,18 +201,13 @@ new_columns[new_columns == 'titles'] = 'title'
 new_columns[new_columns == 'themes'] = 'theme'
 new_columns[new_columns == 'tags'] = 'tag'
 new_columns[new_columns == 'event_types'] = 'event'
-
-## reset index
-df.reset_index(inplace=True)
-df.drop('index',inplace=True,axis=1)
-df.index.name = 'panel_id'
+df.columns = new_columns
 
 #######################
 ### Panel Table
 panel_df = df[['category','event','idea_description','level','panel_url', 'title','theme']]
 # need to remove 'idea_descriptions' for now due to size
 panel_df = panel_df.drop('idea_description',axis=1)
-
 
 #######################
 ### Panel Description Table
@@ -236,3 +320,23 @@ company_df.to_sql('company',engine,flavor='mysql',if_exists='append',index=True)
 employee_df.to_sql('employee',engine,flavor='mysql',if_exists='append',index=True)
 employee_website_df.to_sql('employee_website',engine,flavor='mysql',if_exists='append',index=False)
 panel_employee_df.to_sql('panel_employee',engine,flavor='mysql',if_exists='append',index=False)
+
+### Run analysis and put into mysql database
+### Update database or not
+nlp_results = pandas.HDFStore('nlp_results.h5')
+
+### Top Words - titles #################### 
+nlp_results.df_top_title_words.to_sql('title_words', engine,flavor='mysql',if_exists='append',index=True)
+nlp_results.title_words_map.to_sql('title_words_map', engine,flavor='mysql',if_exists='append',index=True)
+
+### Top Words - descriptions  
+nlp_results.df_top_description_words.to_sql('description_words', engine,flavor='mysql',if_exists='append',index=True) 
+nlp_results.description_words_map.to_sql('description_words_map', engine,flavor='mysql',if_exists='append',index=True)
+
+### Top 2grams - titles #################### 
+nlp_results.df_top_title_2grams.to_sql('title_2grams', engine,flavor='mysql',if_exists='append',index=True)
+nlp_results.title_2gram_map.to_sql('title_2gram_map', engine,flavor='mysql',if_exists='append',index=True)
+
+### Top 2grams - descriptions  
+nlp_results.df_top_description_2grams.to_sql('description_2grams', engine,flavor='mysql',if_exists='append',index=True) 
+nlp_results.description_2gram_map.to_sql('description_2gram_map', engine,flavor='mysql',if_exists='append',index=True)
