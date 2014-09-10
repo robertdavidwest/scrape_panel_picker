@@ -9,7 +9,8 @@ import pdb
 import urllib2
 import bs4
 import pandas
-
+import json
+import time
 
 # initialise lists that will hold results of the search
 ids = []
@@ -25,6 +26,7 @@ categories = []
 themes = []
 levels = []
 tags = [] 
+facebook_shares = []
 
 good_pages = 0
 id_df =pandas.read_csv('panel_ids.csv')
@@ -140,12 +142,30 @@ for id_ in id_df.id :
         idx = ['Level' in x.text for x in meta_labels]
         level = pandas.Series(list(meta_data2))[idx].values[0].text                                          
         levels.append(level)
-                                    
+        
+        # facebook shares - try again for 404 Application request limit
+        while True :
+            try :
+                fb_json = urllib2.urlopen('https://graph.facebook.com/' + url).read()
+                fb_share_dict = json.loads(fb_json) 
+                if 'shares' in fb_share_dict.keys():
+                    fb_shares = fb_share_dict['shares']
+                else :
+                    fb_shares = 0
+                                                
+            except:
+                    print "404 for fb_shares on id = " + unicode(id_) + ". Application request limit reached, waiting 10 minutes..."
+                    time.sleep(600) 
+                    continue
+            break    
+    
+        facebook_shares.append(fb_shares)
+        
 # store results in pandas dataframe
-d = {'titles' : titles, 'idea_descriptions' : idea_descriptions, 'questions' : questions, 'urls' : urls, 'speakers' : speakers, 'event_types' : event_types, 'categories' : categories, 'themes' : themes, 'levels' : levels,'tags' :tags, 'companies' : companies, 'company_websites' : company_websites}
+d = {'titles' : titles, 'idea_descriptions' : idea_descriptions, 'questions' : questions, 'urls' : urls, 'speakers' : speakers, 'event_types' : event_types, 'categories' : categories, 'themes' : themes, 'levels' : levels,'tags' :tags, 'companies' : companies, 'company_websites' : company_websites, 'facebook_shares' : facebook_shares}
 df = pandas.DataFrame(d,index= ids)
 
 print 'size =' + str(len(df))
 #df.to_hdf('panel_picker_data.h5','df')
 #df.to_csv('panel_picker_data.csv')
-df.to_json('panel_picker_data.json')
+df.to_json('panel_picker_data_v3.json')

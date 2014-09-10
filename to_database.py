@@ -3,6 +3,7 @@ import numpy
 import sqlalchemy
 from unidecode import unidecode
 from sqlalchemy import MetaData, VARCHAR, TEXT, Integer, Table, Column, ForeignKey
+import spp_analysis
 
 f = open('mysql_pword.txt','r')
 pword = f.read()
@@ -58,7 +59,8 @@ panel.drop(engine,checkfirst=True)
 ### SET META ENVIRONMENT FOR DATABASE
 
 meta = MetaData(bind=engine)
-
+import pdb
+pdb.set_trace()
 ## PANEL ###
 table_panel = Table('panel', meta,
 	Column('panel_id', Integer, primary_key=True, autoincrement=False),
@@ -67,7 +69,8 @@ table_panel = Table('panel', meta,
 	Column('level', TEXT, nullable=True),
 	Column('panel_url', TEXT, nullable=True),
 	Column('title', TEXT, nullable=True),
-	Column('theme', TEXT, nullable=True)
+	Column('theme', TEXT, nullable=True),
+	Column('facebook_shares', Integer, nullable=True)
 )
 
 ## PANEL_DESCRIPTION ###
@@ -120,7 +123,8 @@ table_panel_employee = Table('panel_employee', meta,
 table_title_words = Table('title_words', meta,
 	Column('id', Integer, primary_key=True, autoincrement=False),
 	Column('ngram', TEXT, nullable=False),
-	Column('Frequency', Integer, nullable=False)	
+	Column('Frequency', Integer, nullable=False),	
+	Column('avg_fb_shares', Integer, nullable=False)	
 )
 
 # title_words_map TABLE
@@ -133,7 +137,8 @@ table_title_words_map = Table('title_words_map', meta,
 table_description_words = Table('description_words', meta,
 	Column('id', Integer, primary_key=True, autoincrement=False),
 	Column('ngram', TEXT, nullable=False),
-	Column('Frequency', Integer, nullable=False)	
+	Column('Frequency', Integer, nullable=False),
+	Column('avg_fb_shares', Integer, nullable=False)
 )
 
 # table_description_words_map TABLE
@@ -146,7 +151,8 @@ table_description_words_map = Table('description_words_map', meta,
 table_title_2grams = Table('title_2grams', meta,
 	Column('id', Integer, primary_key=True, autoincrement=False),
 	Column('ngram', TEXT, nullable=False),
-	Column('Frequency', Integer, nullable=False)	
+	Column('Frequency', Integer, nullable=False),
+	Column('avg_fb_shares', Integer, nullable=False)
 )
 
 # title_words_map TABLE
@@ -159,7 +165,8 @@ table_title_2gram_map = Table('title_2gram_map', meta,
 table_description_2grams = Table('description_2grams', meta,
 	Column('id', Integer, primary_key=True, autoincrement=False),
 	Column('ngram', TEXT, nullable=False),
-	Column('Frequency', Integer, nullable=False)	
+	Column('Frequency', Integer, nullable=False),
+	Column('avg_fb_shares', Integer, nullable=False)
 )
 
 # table_description_words_map TABLE
@@ -181,7 +188,23 @@ meta.create_all(engine)
 ### Reformat data for mySQL relations tables
 
 ## Create dataframes that will be used as SQL tables: 
-df = pandas.io.json.read_json('panel_picker_data_all_v2.json')
+df = pandas.io.json.read_json('panel_picker_data_v3.json')
+import pdb
+pdb.set_trace()
+
+### Clean company data
+new_company_list = []
+for company_list in df.companies :
+	company_list = spp_analysis.clean_list_of_string(company_list)
+	new_company_list.append(company_list)
+df.companies = new_company_list
+
+### Clean speaker data
+new_speaker_list = []
+for speaker_list in df.speakers :
+	speaker_list = spp_analysis.clean_list_of_string(speaker_list)
+	new_speaker_list.append(speaker_list)
+df.speakers = new_speaker_list
 
 ## reset index
 df.reset_index(inplace=True)
@@ -205,7 +228,7 @@ df.columns = new_columns
 
 #######################
 ### Panel Table
-panel_df = df[['category','event','idea_description','level','panel_url', 'title','theme']]
+panel_df = df[['category','event','idea_description','level','panel_url', 'title','theme','facebook_shares']]
 # need to remove 'idea_descriptions' for now due to size
 panel_df = panel_df.drop('idea_description',axis=1)
 
@@ -322,7 +345,6 @@ employee_website_df.to_sql('employee_website',engine,flavor='mysql',if_exists='a
 panel_employee_df.to_sql('panel_employee',engine,flavor='mysql',if_exists='append',index=False)
 
 ### Run analysis and put into mysql database
-### Update database or not
 nlp_results = pandas.HDFStore('nlp_results.h5')
 
 ### Top Words - titles #################### 

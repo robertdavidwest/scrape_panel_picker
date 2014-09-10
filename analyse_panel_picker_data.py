@@ -2,6 +2,7 @@ import pandas
 import numpy
 from nltk.corpus import stopwords
 from spp_analysis import plot_topN_bar, top_N_ngrams
+import spp_analysis
 import time
 import datetime
 import subprocess
@@ -42,16 +43,18 @@ def main(df_from_scrape , create_html_report):
     
     # words
     df_top_title_words, title_words_map = top_N_ngrams(df_from_scrape.title,std_word_set,additional_stop_words,1,N) # titles
+    df_top_title_words, title_words_map = spp_analysis.avg_fb_shares_per_top_ngram(df_top_title_words, title_words_map,df_from_scrape)
+    
     df_top_description_words, description_words_map = top_N_ngrams(df_from_scrape.idea_description,std_word_set,additional_stop_words,1,N) # description
+    df_top_description_words, description_words_map = spp_analysis.avg_fb_shares_per_top_ngram(df_top_description_words, description_words_map,df_from_scrape)
     
     # 2grams
     df_top_title_2grams, title_2gram_map = top_N_ngrams(df_from_scrape.title,std_word_set,[],2,N)  # titles
-    df_top_description_2grams, description_2gram_map = top_N_ngrams(df_from_scrape.idea_description,std_word_set,[],2,N) # description
-
-    # 3grams
-    #df_top_title_3grams, title_3gram_map = top_N_ngrams(df_from_scrape.title,std_word_set,[],3,N)  # titles
-    #df_top_description_3grams, description_3gram_map = top_N_ngrams(df_from_scrape.idea_description,std_word_set,[],3,N) # description
+    df_top_title_2grams, title_2gram_map = spp_analysis.avg_fb_shares_per_top_ngram(df_top_title_2grams, title_2gram_map,df_from_scrape)
     
+    df_top_description_2grams, description_2gram_map = top_N_ngrams(df_from_scrape.idea_description,std_word_set,[],2,N) # description
+    df_top_description_2grams, description_2gram_map = spp_analysis.avg_fb_shares_per_top_ngram(df_top_description_2grams, description_2gram_map,df_from_scrape)
+  
     ### Top Companies
     N = 10
     value_count_percent = all_companies.value_counts(normalize=True)
@@ -181,8 +184,21 @@ def main(df_from_scrape , create_html_report):
 if __name__ == "__main__" :     
     
     ## 
-    df = pandas.io.json.read_json('panel_picker_data_all_v2.json')
+    df = pandas.io.json.read_json('panel_picker_data_v3.json')
+    ### Clean company data
+    new_company_list = []
+    for company_list in df.companies :
+        company_list = spp_analysis.clean_list_of_string(company_list)
+        new_company_list.append(company_list)
+    df.companies = new_company_list
     
+    ### Clean speaker data
+    new_speaker_list = []
+    for speaker_list in df.speakers :
+        speaker_list = spp_analysis.clean_list_of_string(speaker_list)
+        new_speaker_list.append(speaker_list)
+    df.speakers = new_speaker_list
+
     ## reset index
     df.reset_index(inplace=True)
     df.drop('index',inplace=True,axis=1)

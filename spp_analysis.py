@@ -15,6 +15,20 @@ import sqlalchemy
 ##                NLP Functions  
 ####################################################
 
+def avg_fb_shares_per_top_ngram(df_top_ngrams, ngram_map, df_from_scrape):
+	
+	avg_shares = []
+	for i in xrange(len(df_top_ngrams)):
+		idx = ngram_map.index[ngram_map.id == i]
+		avg = numpy.average(df_from_scrape.facebook_shares[idx])
+		avg_shares.append(avg)
+	
+	df_top_ngrams['avg_fb_shares'] = avg_shares
+	import pdb
+	pdb.set_trace()
+	return df_top_ngrams, ngram_map
+
+
 def ngrams(input, n):
   '''takes a string of words and returns a list of ngrams where n in the number of words in the ngram'''  
   input = input.split(' ')
@@ -31,6 +45,32 @@ def is_number(s):
 	except ValueError:
 		return False
 
+def clean_list_of_string(list_of_strings) : 
+	
+	# Convert Unicode to closest ascii representation 
+	clean_list = [unidecode(x) for x in list_of_strings]
+	
+	# make all entries lower case
+	clean_list = [x.lower() for x in clean_list]
+	
+	# remove punctuation except for dash
+	exclude = set(string.punctuation)
+	without_punc = []
+	for s in clean_list:
+		without_punc.append(''.join(ch for ch in s if ch not in exclude))
+	clean_list = without_punc
+	
+	# Make all white space into a single space
+	clean_list = [re.sub( '\s+', ' ', x ).strip() for x in clean_list]
+	
+	# remove numbers
+	without_numbers = []
+	for s in clean_list:
+		without_numbers.append(''.join(ch for ch in s if not is_number(ch)))
+	clean_list = without_numbers
+	
+	return clean_list
+
 def top_N_ngrams(series, std_word_set, additional_stop_words,n,N):
 	''' Takes as an argument a pandas Series of strings
 
@@ -42,7 +82,6 @@ def top_N_ngrams(series, std_word_set, additional_stop_words,n,N):
 
 	:param additional_stop_words: a list of additional stopwords
 	:type seach_key_words: list
-
 
 	'''
 	# Remove duplicate listings
